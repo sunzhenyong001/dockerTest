@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.example</groupId>
+    <artifactId>dockertest</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-parent</artifactId>
+        <version>2.3.0.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <version>2.3.0.RELEASE</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <!-- 引用我们的项目名字 -->
+        <finalName>${project.artifactId}</finalName>
+
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>2.3.0.RELEASE</version>
+                <configuration>
+                    <mainClass>
+                        per.Main
+                    </mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+            <!--使用docker-maven-plugin插件-->
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <!--将插件绑定在某个phase执行-->
+                <!--<executions>
+                    <execution>
+                        <id>default</id>
+                        &lt;!&ndash;用户只需执行mvn package ，就会自动执行mvn docker:build&ndash;&gt;
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build</goal>
+                            <goal>push</goal>
+                        </goals>
+                    </execution>
+                </executions>-->
+
+                <!--<configuration>
+                    &lt;!&ndash;指定生成的镜像名,这里是我们的作者名+项目名&ndash;&gt;
+                    <imageName>${project.artifactId}</imageName>
+                    <dockerDirectory>${project.basedir}/src/main</dockerDirectory>
+                    &lt;!&ndash;指定标签 这里指定的是镜像的版本，我们默认版本是latest&ndash;&gt;
+                    <imageTags>
+                        <imageTag>latest</imageTag>
+                    </imageTags>
+
+                    &lt;!&ndash;指定基础镜像jdk1.8&ndash;&gt;
+                   &lt;!&ndash; <baseImage>java</baseImage>&ndash;&gt;
+                    &lt;!&ndash;
+                    镜像制作人本人信息
+                    <maintainer>bruceliu@email.com</maintainer>
+                    &ndash;&gt;
+                    &lt;!&ndash;切换到ROOT目录&ndash;&gt;
+                    &lt;!&ndash;<workdir>/ROOT</workdir>&ndash;&gt;
+
+                    &lt;!&ndash;查看我们的java版本&ndash;&gt;
+                    &lt;!&ndash;<cmd>["java", "-version"]</cmd>&ndash;&gt;
+
+                    &lt;!&ndash;${project.build.finalName}.jar是打包后生成的jar包的名字&ndash;&gt;
+                    &lt;!&ndash;<entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>&ndash;&gt;
+
+                    &lt;!&ndash;指定远程 docker api地址&ndash;&gt;
+                    <dockerHost>http://127.0.0.1</dockerHost>
+
+                    &lt;!&ndash; 这里是复制 jar 包到 docker 容器指定目录配置 &ndash;&gt;
+                    <resources>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            &lt;!&ndash;jar 包所在的路径  此处配置的 即对应 target 目录&ndash;&gt;
+                            <directory>${project.build.directory}</directory>
+                            &lt;!&ndash;用于指定需要复制的文件 需要包含的 jar包 ，这里对应的是 Dockerfile中添加的文件名　&ndash;&gt;
+                            <include>${project.build.finalName}.jar</include>
+                        </resource>
+                    </resources>
+
+                </configuration>-->
+
+                <configuration>
+                    <maintainer>
+
+                    </maintainer>
+                    <dockerHost>http://127.0.0.1</dockerHost>
+                    <imageName>dockertest</imageName>
+                    <dockerDirectory>./</dockerDirectory>
+                    <resources>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            <directory>${project.build.directory}</directory>
+                            <include>${project.build.finalName}.jar</include>
+                        </resource>
+                    </resources>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
